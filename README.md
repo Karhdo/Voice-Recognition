@@ -13,7 +13,7 @@
 ## Installation
 
 1. Python: version over 3.8
-2. Install required libraries in [requirement.txt](...)
+2. Install required libraries in [requirement.txt](https://github.com/Karhdo/Voice-Recognition/blob/86ae116bba8478a737743b05015b479a79948fc0/requirements.txt)
 
 ```bash
 # install library
