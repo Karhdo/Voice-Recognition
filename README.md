@@ -20,7 +20,7 @@ pip install torch==1.8.0
 ```
 
 ## Run project
-- Run below command, project will run at `http://127.0.0.1:8000`
+- Run the below command, the project runs at `http://127.0.0.1:8000`
 ```bash
 uvicorn main:app --reload 
 ```
