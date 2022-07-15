@@ -3,7 +3,9 @@ const audioElement = $(".output audio");
 const btnSubmit = $(".btn-submit");
 const btnLoading = $(".btn-loading");
 const outputElement = $(".output");
-const outputText = $(".output__text");
+const greedyText = $(".greedy__text");
+const beamText = $(".beam__text");
+
 
 let file, fileURL;
 let fileReader = new FileReader();
@@ -20,45 +22,50 @@ btnSubmit.click((event) => {
     if (!file) {
         alert("Please upload your audio!");
     } else {
-        btnSubmit.hide();
-        btnLoading.show();
+        if (!validateFile(file)) {
+            alert("Please upload a valid audio file!");
+        } else {
+            btnSubmit.hide();
+            btnLoading.show();
 
-        displayAudioElement(file.type);
+            const formData = new FormData();
+            formData.append("file", file);
 
-        const formData = new FormData();
-        formData.append("file", file);
+            const xhr = new XMLHttpRequest();
 
-        const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/upload/audio", true);
+            xhr.send(formData);
 
-        xhr.open("POST", "/upload/audio", true);
-        xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                    btnSubmit.show();
+                    btnLoading.hide();
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-                btnSubmit.show();
-                btnLoading.hide();
-
-                const data = JSON.parse(xhr.responseText);
-                outputText.text(data);
-            }
-        };
+                    const data = JSON.parse(xhr.responseText);
+                    greedyText.text(data.greedy_output);
+                    beamText.text(data.beam_output);
+                    
+                    displayAudioElement();
+                }
+            };
+        }
     }
 });
 
-const displayAudioElement = function (fileType) {
+const validateFile = function (file) {
     let validExtensions = ["audio/wav", "audio/mp3"];
 
-    if (!validExtensions.includes(fileType)) {
-        alert("This file is not supported!");
-    } else {
-        fileReader.onload = () => {
-            let fileURL = fileReader.result;
-            audioElement.attr("src", fileURL);
-        };
-        fileReader.readAsDataURL(file);
+    return validExtensions.includes(file.type);
+};
 
-        outputElement.show();
-    }
+const displayAudioElement = function () {
+    fileReader.onload = () => {
+        let fileURL = fileReader.result;
+        audioElement.attr("src", fileURL);
+    };
+    fileReader.readAsDataURL(file);
+
+    outputElement.show();
 };
 
 // const voiceRecognition = async (formData) => {

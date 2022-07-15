@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Form, Request, File, UploadFile, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from vietnamese_asr.audio_to_text import inference
+from vietnamese_asr.audio_to_text_api_gg import asr_gg
 
 app = FastAPI()
 
@@ -18,5 +21,10 @@ async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     with open(file_location, 'wb') as f:
         f.write(contents)
-
-    return "Google Dịch là một công cụ dịch thuật trực tuyến do Google phát triển. Nó cung cấp giao diện trang web, ứng dụng trên thiết bị di động cho hệ điều hành Android và iOS và giao diện lập trình ứng dụng giúp nhà phát triển xây dựng tiện ích mở rộng trình duyệt web và ứng dụng phần mềm."
+    
+    greedy_output, beam_output = inference(file_location)
+    data = {
+        'greedy_output': greedy_output,
+        'beam_output': beam_output
+    }
+    return JSONResponse(data)
