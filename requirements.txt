@@ -1,15 +1,17 @@
-# torch==1.8.0
+torch==1.8.0
 numpy
 SpeechRecognition
 pydub
 transformers==4.11.2
 soundfile
 sentencepiece 
-# torchaudio 
+torchaudio 
 librosa
 scipy
 pyrsistent
 pyctcdecode
 fastapi
 uvicorn[standard]
-gunicorn==20.1.0
+# gunicorn==20.1.0
+Jinja2
+python-multipart

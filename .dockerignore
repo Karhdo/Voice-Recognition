@@ -1,6 +1,6 @@
 # Cache
-src/vietnamese_asr/cache
+vietnamese_asr/cache
 
 # pycache
-src/vietnamese_asr/__pycache__
+vietnamese_asr/__pycache__
 __pycache__
