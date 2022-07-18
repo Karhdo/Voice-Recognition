@@ -3,7 +3,7 @@ const audioElement = $(".output audio");
 const btnSubmit = $(".btn-submit");
 const btnLoading = $(".btn-loading");
 const outputElement = $(".output");
-const greedyText = $(".greedy__text");
+// const greedyText = $(".greedy__text");
 const beamText = $(".beam__text");
 
 
@@ -42,7 +42,7 @@ btnSubmit.click((event) => {
                     btnLoading.hide();
 
                     const data = JSON.parse(xhr.responseText);
-                    greedyText.text(data.greedy_output);
+                    // greedyText.text(data.greedy_output);
                     beamText.text(data.beam_output);
                     
                     displayAudioElement();
