@@ -2,12 +2,11 @@ from pyrsistent import s
 import scipy as sp
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import soundfile as sf
-import torch
+# import torch
 import kenlm
 from pyctcdecode import Alphabet, BeamSearchDecoderCTC, LanguageModel
 import os, zipfile
 from transformers.file_utils import cached_path, hf_bucket_url
-import torchaudio
 import librosa
 
 def load_pretrained_model(cache_dir):
@@ -59,11 +58,11 @@ def inference(audio_file, model, lm_file, processor):
     logits = model(input_values).logits[0]
 
     # decode ctc output
-    pred_ids = torch.argmax(logits, dim=-1)
-    greedy_search_output = processor.decode(pred_ids)
+    # pred_ids = torch.argmax(logits, dim=-1)
+    # greedy_search_output = processor.decode(pred_ids)
     beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
-    print("Greedy search output: {}".format(greedy_search_output))
+    # print("Greedy search output: {}".format(greedy_search_output))
     print("Beam search output: {}".format(beam_search_output))
-    return greedy_search_output, beam_search_output
+    return beam_search_output
 
 # inference()
