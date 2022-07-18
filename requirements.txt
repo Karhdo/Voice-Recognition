@@ -12,3 +12,4 @@ pyrsistent
 pyctcdecode
 fastapi
 uvicorn[standard]
+gunicorn==20.1.0
