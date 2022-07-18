@@ -33,28 +33,21 @@ def get_decoder_ngram_model(tokenizer, ngram_lm_path):
     # convert space character representation
     vocab_list[tokenizer.word_delimiter_token_id] = " "
     # specify ctc blank char index, since conventially it is the last entry of the logit matrix
-    print(tokenizer.pad_token_id)
+
     alphabet = Alphabet.build_alphabet(vocab_list, ctc_token_idx=tokenizer.pad_token_id)
     lm_model = kenlm.Model(ngram_lm_path)
     decoder = BeamSearchDecoderCTC(alphabet, language_model=LanguageModel(lm_model))
     return decoder
 
 def speech_file_to_array_fn(batch):
-    # speech, sampling_rate = sf.read(batch["file"])
-    # speech = speech.flatten()
-    # speech, sampling_rate = torchaudio.load(batch["file"])
     speech, sampling_rate = librosa.load(batch["file"], sr=16000)
     batch["speech"] = speech
     batch["sampling_rate"] = sampling_rate
     return batch
 
-def inference(audio_file): 
-    cache_dir = './vietnamese_asr/cache/'
-
-    # Load model
-    processor, model, lm_file = load_pretrained_model(cache_dir)
-
+def inference(audio_file, model, lm_file, processor): 
     ds = speech_file_to_array_fn({"file": audio_file})
+    print("Load audio successfully")
     ngram_lm_model = get_decoder_ngram_model(processor.tokenizer, lm_file)
 
     # infer model

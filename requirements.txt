@@ -9,7 +9,6 @@ torchaudio
 librosa
 scipy
 pyrsistent
-# kenlm
-https://github.com/kpu/kenlm/archive/master.zip
 pyctcdecode
-gradio
+fastapi
+uvicorn[standard]
