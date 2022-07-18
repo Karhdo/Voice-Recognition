@@ -5,7 +5,7 @@ pydub
 transformers==4.11.2
 soundfile
 sentencepiece 
-torchaudio 
+# torchaudio 
 librosa
 scipy
 pyrsistent
