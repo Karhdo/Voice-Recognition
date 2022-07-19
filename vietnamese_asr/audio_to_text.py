@@ -2,7 +2,7 @@ from pyrsistent import s
 import scipy as sp
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import soundfile as sf
-# import torch
+import torch
 import kenlm
 from pyctcdecode import Alphabet, BeamSearchDecoderCTC, LanguageModel
 import os, zipfile
@@ -47,7 +47,7 @@ def speech_file_to_array_fn(batch):
 def inference(audio_file, model, lm_file, processor): 
     ds = speech_file_to_array_fn({"file": audio_file})
     print("Load audio successfully")
-    ngram_lm_model = get_decoder_ngram_model(processor.tokenizer, lm_file)
+    # ngram_lm_model = get_decoder_ngram_model(processor.tokenizer, lm_file)
 
     # infer model
     input_values = processor(
@@ -58,11 +58,12 @@ def inference(audio_file, model, lm_file, processor):
     logits = model(input_values).logits[0]
 
     # decode ctc output
-    # pred_ids = torch.argmax(logits, dim=-1)
-    # greedy_search_output = processor.decode(pred_ids)
-    beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
-    # print("Greedy search output: {}".format(greedy_search_output))
-    print("Beam search output: {}".format(beam_search_output))
-    return beam_search_output
+    pred_ids = torch.argmax(logits, dim=-1)
+    greedy_search_output = processor.decode(pred_ids)
+    # beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
+    print("Greedy search output: {}".format(greedy_search_output))
+    # print("Beam search output: {}".format(beam_search_output))
+    # return beam_search_output
+    return greedy_search_output
 
 # inference()

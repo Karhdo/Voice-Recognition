@@ -27,8 +27,8 @@ async def predict(file: UploadFile = File(...)):
     with open(file_location, 'wb') as f:
         f.write(contents)
     
-    # greedy_output, beam_output = inference(file_location, model, lm_file, processor)
-    beam_output = inference(file_location, model, lm_file, processor)
+    greedy_output = inference(file_location, model, lm_file, processor)
+    # beam_output = inference(file_location, model, lm_file, processor)
 
     # Delete file audio after handle voice recognition
     if os.path.exists(file_location):
@@ -37,8 +37,8 @@ async def predict(file: UploadFile = File(...)):
         print("The file does not exist")
 
     data = {}
-    if ( beam_output):
+    if ( greedy_output):
         data = {
-            'beam_output': beam_output
+            'greedy_output': greedy_output
         }
     return JSONResponse(data)
