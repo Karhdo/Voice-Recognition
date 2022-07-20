@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from vietnamese_asr.audio_to_text import inference, load_pretrained_model
+from vietnamese_asr.audio_to_text import inference, load_pretrained_model, get_large_audio_transcription
 from vietnamese_asr.audio_to_text_api_gg import asr_gg
 import os
 
@@ -27,18 +27,20 @@ async def predict(file: UploadFile = File(...)):
     with open(file_location, 'wb') as f:
         f.write(contents)
     
-    greedy_output = inference(file_location, model, lm_file, processor)
-    # beam_output = inference(file_location, model, lm_file, processor)
+    greedy_output, beam_output = get_large_audio_transcription(file_location, model, lm_file, processor)
 
-    # Delete file audio after handle voice recognition
-    if os.path.exists(file_location):
-        os.remove(file_location)
-    else:
-        print("The file does not exist")
+    # greedy_output, beam_output = inference(file_location, model, lm_file, processor)
+
+    # # Delete file audio after handle voice recognition
+    # if os.path.exists(file_location):
+    #     os.remove(file_location)
+    # else:
+    #     print("The file does not exist")
 
     data = {}
-    if ( greedy_output):
+    if ( greedy_output and beam_output ):
         data = {
-            'greedy_output': greedy_output
+            'greedy_output': greedy_output,
+            'beam_output': beam_output
         }
     return JSONResponse(data)
