@@ -22,6 +22,8 @@ processor, model, lm_file = load_pretrained_model(cache_dir)
 
 @app.post('/upload/audio', status_code=status.HTTP_200_OK)
 async def predict(file: UploadFile = File(...)):
+    if not os.path.isdir("./uploads"):
+        os.mkdir("./uploads")
     file_location = f"./uploads/{file.filename}"
     contents = await file.read()
     with open(file_location, 'wb') as f:
