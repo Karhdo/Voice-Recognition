@@ -1,10 +1,9 @@
 from pyrsistent import s
-import scipy as sp
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import soundfile as sf
 import torch
 import kenlm
-from pyctcdecode import Alphabet, BeamSearchDecoderCTC, LanguageModel
+from pyctcdecode import Alphabet, BeamSearchDecoderCTC, LanguageModel, build_ctcdecoder
 import os, zipfile
 from transformers.file_utils import cached_path, hf_bucket_url
 import librosa
@@ -81,9 +80,10 @@ def get_decoder_ngram_model(tokenizer, ngram_lm_path):
     vocab_list[tokenizer.word_delimiter_token_id] = " "
     # specify ctc blank char index, since conventially it is the last entry of the logit matrix
 
-    alphabet = Alphabet.build_alphabet(vocab_list, ctc_token_idx=tokenizer.pad_token_id)
+    # alphabet = Alphabet.build_alphabet(vocab_list, ctc_token_idx=tokenizer.pad_token_id)
     lm_model = kenlm.Model(ngram_lm_path)
-    decoder = BeamSearchDecoderCTC(alphabet, language_model=LanguageModel(lm_model))
+    # decoder = BeamSearchDecoderCTC(alphabet, language_model=LanguageModel(lm_model))
+    decoder = build_ctcdecoder(vocab_list, lm_model,is_bpe=False)
     return decoder
 
 def speech_file_to_array_fn(batch):
@@ -109,6 +109,7 @@ def inference(audio_file, model, lm_file, processor):
     pred_ids = torch.argmax(logits, dim=-1)
     greedy_search_output = processor.decode(pred_ids)
     beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
+    # beam_search_output = "beam_search_output"
     print("Greedy search output: {}".format(greedy_search_output))
     print("Beam search output: {}".format(beam_search_output))
     return greedy_search_output, beam_search_output
