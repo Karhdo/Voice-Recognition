@@ -63,6 +63,7 @@ def get_large_audio_transcription(audio_file, model, lm_file, processor):
         os.remove(audio_file)
     else:
         print("The file does not exist")
+    beam_whole_text = "beam_search_output"
     print("Greedy search output: {}".format(greedy_whole_text))
     print("Beam search output: {}".format(beam_whole_text))
     return greedy_whole_text, beam_whole_text
@@ -83,7 +84,7 @@ def get_decoder_ngram_model(tokenizer, ngram_lm_path):
     # alphabet = Alphabet.build_alphabet(vocab_list, ctc_token_idx=tokenizer.pad_token_id)
     lm_model = kenlm.Model(ngram_lm_path)
     # decoder = BeamSearchDecoderCTC(alphabet, language_model=LanguageModel(lm_model))
-    decoder = build_ctcdecoder(vocab_list, lm_model,is_bpe=False)
+    decoder = build_ctcdecoder(vocab_list, lm_model, is_bpe=False)
     return decoder
 
 def speech_file_to_array_fn(batch):
@@ -95,7 +96,7 @@ def speech_file_to_array_fn(batch):
 def inference(audio_file, model, lm_file, processor): 
     ds = speech_file_to_array_fn({"file": audio_file})
     print("Load audio successfully")
-    ngram_lm_model = get_decoder_ngram_model(processor.tokenizer, lm_file)
+    # ngram_lm_model = get_decoder_ngram_model(processor.tokenizer, lm_file)
 
     # infer model
     input_values = processor(
@@ -108,8 +109,8 @@ def inference(audio_file, model, lm_file, processor):
     # decode ctc output
     pred_ids = torch.argmax(logits, dim=-1)
     greedy_search_output = processor.decode(pred_ids)
-    beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
-    # beam_search_output = "beam_search_output"
+    # beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
+    beam_search_output = ""
     print("Greedy search output: {}".format(greedy_search_output))
     print("Beam search output: {}".format(beam_search_output))
     return greedy_search_output, beam_search_output
