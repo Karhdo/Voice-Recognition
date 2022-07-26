@@ -54,7 +54,7 @@ def get_large_audio_transcription(audio_file, model, lm_file, processor):
         audio_chunk.export(chunk_filename, format="wav")
 
         greedy_output, beam_output = inference(chunk_filename, model, lm_file, processor)
-        if (greedy_output and beam_output):
+        if (greedy_output or beam_output):
             greedy_whole_text += " " + greedy_output
             beam_whole_text += " " + beam_output
         os.remove(chunk_filename)
@@ -111,8 +111,8 @@ def inference(audio_file, model, lm_file, processor):
     greedy_search_output = processor.decode(pred_ids)
     # beam_search_output = ngram_lm_model.decode(logits.cpu().detach().numpy(), beam_width=500)
     beam_search_output = ""
-    print("Greedy search output: {}".format(greedy_search_output))
-    print("Beam search output: {}".format(beam_search_output))
+    # print("Greedy search output: {}".format(greedy_search_output))
+    # print("Beam search output: {}".format(beam_search_output))
     return greedy_search_output, beam_search_output
 
 # inference()

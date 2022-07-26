@@ -30,7 +30,6 @@ async def predict(file: UploadFile = File(...)):
         f.write(contents)
     
     greedy_output, beam_output = get_large_audio_transcription(file_location, model, lm_file, processor)
-
     # greedy_output, beam_output = inference(file_location, model, lm_file, processor)
 
     # # Delete file audio after handle voice recognition
