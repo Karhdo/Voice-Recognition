@@ -2,7 +2,6 @@ FROM duyducdev/voice-recognition:latest
 WORKDIR /app
 
 COPY ./template ./template
-COPY ./uploads ./uploads
 COPY ./vietnamese_asr ./vietnamese_asr
 COPY ./main.py .
 
