@@ -1,1 +1,3 @@
-/vietnamese_asr/cache
+vietnamese_asr/cache
+__pycache__
+vietnamese_asr/__pycache__

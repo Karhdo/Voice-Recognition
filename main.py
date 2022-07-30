@@ -31,19 +31,11 @@ async def predict(file: UploadFile = File(...)):
     with open(file_location, 'wb') as f:
         f.write(contents)
     
-    greedy_output, beam_output = get_large_audio_transcription(file_location, model, lm_file, processor)
-    # greedy_output, beam_output = inference(file_location, model, lm_file, processor)
-
-    # # Delete file audio after handle voice recognition
-    # if os.path.exists(file_location):
-    #     os.remove(file_location)
-    # else:
-    #     print("The file does not exist")
+    beam_output = get_large_audio_transcription(file_location, model, lm_file, processor)
 
     data = {}
-    if ( greedy_output and beam_output ):
+    if (beam_output):
         data = {
-            'greedy_output': greedy_output,
             'beam_output': beam_output
         }
     return JSONResponse(data)

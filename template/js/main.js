@@ -3,7 +3,6 @@ const audioElement = $(".output audio");
 const btnSubmit = $(".btn-submit");
 const btnLoading = $(".btn-loading");
 const outputElement = $(".output");
-const greedyText = $(".greedy__text");
 const beamText = $(".beam__text");
 
 let file, fileURL;
@@ -41,7 +40,6 @@ btnSubmit.click((event) => {
                     btnLoading.hide();
 
                     const data = JSON.parse(xhr.responseText);
-                    greedyText.text(data.greedy_output);
                     beamText.text(data.beam_output);
 
                     displayAudioElement();
@@ -66,15 +64,3 @@ const displayAudioElement = function () {
 
     outputElement.show();
 };
-
-// const voiceRecognition = async (formData) => {
-//     const response = await fetch("http://127.0.0.1:8000/upload/audio", {
-//         method: "POST",
-//         body: formData,
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//     });
-//     const myJson = await response.json();
-//     console.log(myJson);
-// };

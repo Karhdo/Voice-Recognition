@@ -12,6 +12,6 @@ RUN python3 ./vietnamese_asr/load_model.py
 # RUN apt-get install libsndfile1 -y
 
 # RUN pip3 install -r ./requirements.txt
-# RUN pip install https://github.com/kpu/kenlm/archive/master.zip
+# RUN pip3 install https://github.com/kpu/kenlm/archive/master.zip
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "15400"]

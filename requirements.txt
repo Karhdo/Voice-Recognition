@@ -9,7 +9,7 @@ torchaudio
 librosa
 scipy
 pyrsistent
-pyctcdecode
+pyctcdecode==0.1.0
 fastapi
 uvicorn[standard]
 # gunicorn==20.1.0
